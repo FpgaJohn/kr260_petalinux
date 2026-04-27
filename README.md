@@ -5,6 +5,74 @@ The design implements a 10G Ethernet data path with DMA, AXI FIFOs, and an NI FP
 
 ---
 
+## Recreating the Project in Vivado 2024.1
+
+### Prerequisites
+
+- Vivado 2024.1 installed
+- KR260 board files installed (the script targets `xck26-sfvc784-2LV-c`)
+
+### Steps
+
+**Option A — Vivado GUI**
+
+1. Open Vivado 2024.1.
+2. In the Tcl Console (bottom panel), navigate to the `vivado` directory:
+   ```tcl
+   cd {C:/work/kr260/kr260_petalinux/vivado}
+   ```
+3. Source the script:
+   ```tcl
+   source kr260_petalinux.tcl
+   ```
+4. Vivado will create the `kr260_starter_kit` project in the current directory and open it automatically.
+
+**Option B — Vivado Tcl Shell (batch)**
+
+1. Open a terminal and launch the Vivado Tcl shell:
+   ```
+   vivado -mode tcl
+   ```
+2. Navigate to the `vivado` directory and source the script:
+   ```tcl
+   cd {C:/work/kr260/kr260_petalinux/vivado}
+   source kr260_petalinux.tcl
+   ```
+
+### After Project Creation
+
+The script creates the block design but does not launch any runs. To generate the bitstream:
+
+1. Generate the block design output products:
+   **Flow Navigator → IP Integrator → Generate Block Design**
+2. Run Synthesis:
+   **Flow Navigator → Synthesis → Run Synthesis**
+3. Run Implementation:
+   **Flow Navigator → Implementation → Run Implementation**
+4. Generate Bitstream:
+   **Flow Navigator → Program and Debug → Generate Bitstream**
+
+### Repository Structure
+
+```
+vivado/
+├── kr260_petalinux.tcl       # Vivado project recreation script
+├── archive_project_summary.txt
+├── ip/                        # Verilog/VHDL source files
+│   ├── axis2xgmii.v
+│   ├── xgmii2axis.v
+│   ├── xgmii_includes.vh
+│   ├── my_state.v
+│   ├── kr260_starter_kit_wrapper.v
+│   ├── NiFpgaAG_poc_ip.v
+│   └── NiFpgaIPWrapper_poc_ip.vhd
+└── constraints/               # XDC constraint files
+    ├── default.xdc
+    └── Xentech.xdc
+```
+
+---
+
 ## PS-Accessible FIFOs and DMAs
 
 All peripherals below are mapped into the Zynq PS (`zynq_ultra_ps_e_0`) address space via `M_AXI_HPM0_FPD` through the `slave_axi_mux` interconnect.
